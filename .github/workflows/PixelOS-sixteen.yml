@@ -133,6 +133,7 @@ jobs:
              zip -r ${zip_name} *
              mv ${zip_name} $KERNEL_PATH/out/arch/arm64/boot
           fi
+          ls -la $KERNEL_PATH/out/arch/arm64/boot
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
