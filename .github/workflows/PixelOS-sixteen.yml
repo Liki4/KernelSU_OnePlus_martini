@@ -139,13 +139,13 @@ jobs:
         with:
           name: PixelOS-martini-sixteen-${{ env.TAG_NAME }}
           path: |
-            kernel/AnyKernel3/*
+            /home/runner/work/KernelSU_Oneplus_martini/KernelSU_Oneplus_martini/kernel/AnyKernel3/*
 
       - name: Upload to Release
         if: github.event.inputs.RELEASE_CONFIG == 'true'
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "kernel/out/arch/arm64/boot/PixelOS-martini-sixteen-${{ env.TAG_NAME }}.zip"
+          artifacts: "/home/runner/work/KernelSU_Oneplus_martini/KernelSU_Oneplus_martini/kernel/out/arch/arm64/boot/PixelOS-martini-sixteen-${{ env.TAG_NAME }}.zip"
           tag: "ONEPLUS9RT-PixelOS-sixteen-${{ env.TAG_NAME }}"
           name: "PixelOS martini sixteen ${{ env.TAG_NAME }}"
           allowUpdates: true
