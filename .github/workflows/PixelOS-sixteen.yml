@@ -145,7 +145,7 @@ jobs:
         if: github.event.inputs.RELEASE_CONFIG == 'true'
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "PixelOS-martini-sixteen-${{ env.TAG_NAME }}.zip"
+          artifacts: "PixelOS-martini-sixteen-${{ env.TAG_NAME }}"
           tag: "ONEPLUS9RT-PixelOS-sixteen-${{ env.TAG_NAME }}"
           name: "PixelOS martini sixteen ${{ env.TAG_NAME }}"
           allowUpdates: true
