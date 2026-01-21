@@ -145,7 +145,7 @@ jobs:
         if: github.event.inputs.RELEASE_CONFIG == 'true'
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "PixelOS-martini-SUSFS-sixteen-${{ env.TAG_NAME }}"
+          artifacts: "kernel/out/arch/arm64/boot/PixelOS-martini-SUSFS-sixteen-${{ env.TAG_NAME }}.zip"
           tag: "ONEPLUS9RT-PixelOS-SUSFS-sixteen-${{ env.TAG_NAME }}"
           name: "PixelOS martini SUSFS sixteen ${{ env.TAG_NAME }}"
           allowUpdates: true
