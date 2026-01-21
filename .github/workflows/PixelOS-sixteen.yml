@@ -38,7 +38,7 @@ on:
         KERNELSU_NEXT_TAG:
           description: 'Choose KernelSU-Next branch or tag'
           required: false
-          default: "stable"
+          default: "legacy"
           type: string
 
 jobs:
