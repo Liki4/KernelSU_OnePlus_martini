@@ -13,12 +13,12 @@ on:
         KERNEL_SOURCE:
           description: 'Kernel Source'
           required: true
-          default: "https://github.com/PixelOS-Devices/android_kernel_oneplus_sm8350.git"
+          default: "https://github.com/Liki4/android_kernel_oneplus_sm8350.git"
           type: string
         KERNEL_SOURCE_BRANCH:
           description: 'kernel Branch'
           required: true
-          default: "sixteen-qpr1"
+          default: "sixteen-qpr1-manual-hook"
           type: string
         KERNEL_DEFCONFIG:
           description: 'Kernel Config'
@@ -94,7 +94,7 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/kernel
           curl -LSs "https://raw.githubusercontent.com/KernelSU-Next/KernelSU-Next/next/kernel/setup.sh" | bash -s "${{ github.event.inputs.KERNELSU_NEXT_TAG }}"
-          scripts/config --file "arch/arm64/configs/${{ github.event.inputs.KERNEL_DEFCONFIG }}" -e MODULES -e KPROBES -e HAVE_KPROBES -e KPROBE_EVENTS
+          scripts/config --file "arch/arm64/configs/${{ github.event.inputs.KERNEL_DEFCONFIG }}" -e MODULES -e KPROBES -e HAVE_KPROBES -e KPROBE_EVENTS -e KSU_MANUAL_HOOK
 
       - name: Make kernel
         run: |
