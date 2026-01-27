@@ -94,7 +94,7 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/kernel
           curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s "${{ github.event.inputs.KERNELSU_TAG }}"
-          scripts/config --file "arch/arm64/configs/${{ github.event.inputs.KERNEL_DEFCONFIG }}" -e KSU
+          scripts/config --file "arch/arm64/configs/${{ github.event.inputs.KERNEL_DEFCONFIG }}" -d KPROBES
 
       - name: Make kernel
         run: |
