@@ -1,4 +1,4 @@
-name: Pixel OS
+name: PixelOS sixteen Stock
 
 
 on:
@@ -13,33 +13,23 @@ on:
         KERNEL_SOURCE:
           description: 'Kernel Source'
           required: true
-          default: "https://github.com/Liki4/android_kernel_oneplus_sm8350.git"
+          default: "https://github.com/PixelOS-Devices/android_kernel_oneplus_sm8350.git"
           type: string
         KERNEL_SOURCE_BRANCH:
           description: 'kernel Branch'
           required: true
-          default: "sixteen-qpr1-manual-hook-ksu"
+          default: "sixteen-qpr1"
           type: string
         KERNEL_DEFCONFIG:
           description: 'Kernel Config'
           required: true
           default: "vendor/lahaina-qgki_defconfig"
           type: string
-        KERNELSU_CONFIG:
-          description: 'Compile KernelSU'
-          required: true
-          default: true
-          type: boolean          
         CCACHE_CONFIG:
           description: 'Use Ccache'
           required: true
           default: true
           type: boolean
-        KERNELSU_TAG:
-          description: 'Choose KernelSU branch or tag'
-          required: false
-          default: "v0.9.5"
-          type: string
 
 jobs:
 
@@ -60,7 +50,7 @@ jobs:
         if: github.event.inputs.CCACHE_CONFIG == 'true'
         uses: hendrikmuhs/ccache-action@v1.2
         with:
-          key: PixelOS-inline
+          key: PixelOS-sixteen-Stock
 
       - name: Setup Environment
         run: |
@@ -89,14 +79,6 @@ jobs:
           git clone "${{ github.event.inputs.KERNEL_SOURCE }}" -b "${{ github.event.inputs.KERNEL_SOURCE_BRANCH }}" kernel --depth=1
           echo "TAG_NAME=v5.4.$(grep "^SUBLEVEL =" kernel/Makefile | awk '{print $3}')-$(date +"%Y%m%d")" >> $GITHUB_ENV
 
-      - name: Setup KernelSU and fix strncpy_from_unsafe_user
-        if: github.event.inputs.KERNELSU_CONFIG == 'true'
-        run: |
-          cd $GITHUB_WORKSPACE/kernel
-          curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s "${{ github.event.inputs.KERNELSU_TAG }}"
-          scripts/config --file "arch/arm64/configs/${{ github.event.inputs.KERNEL_DEFCONFIG }}" -d KPROBES
-          sed -i "s/strncpy_from_unsafe_user/strncpy_from_user_nofault/g" drivers/kernelsu/kernel_compat.c
-
       - name: Make kernel
         run: |
           cd $GITHUB_WORKSPACE/kernel
@@ -121,24 +103,24 @@ jobs:
           fi
           make O=out CC="ccache clang" CXX="ccache clang++" ARCH=arm64 -j`nproc` CROSS_COMPILE=$CLANG_PATH/bin/aarch64-linux-gnu- CROSS_COMPILE_ARM32=$CLANG_PATH/bin/arm-linux-gnueabi- LD=ld.lld 2>&1 | tee kernel.log
 
-      
       - name: Create Anykernel3 file
         run: |
           cd $GITHUB_WORKSPACE/kernel
           export KERNEL_PATH=$PWD
           git clone https://github.com/Liki4/AnyKernel3-martini.git --depth=1 $KERNEL_PATH/AnyKernel3
           if test -e $KERNEL_PATH/out/arch/arm64/boot/Image && test -d $KERNEL_PATH/AnyKernel3; then
-             zip_name="PixelOS-martini-${{ env.TAG_NAME }}.zip"
+             zip_name="PixelOS-sixteen-Stock-martini-${{ env.TAG_NAME }}.zip"
              cd $KERNEL_PATH/AnyKernel3
              cp $KERNEL_PATH/out/arch/arm64/boot/Image $KERNEL_PATH/AnyKernel3
              zip -r ${zip_name} *
              mv ${zip_name} $KERNEL_PATH/out/arch/arm64/boot
           fi
+          ls -la $KERNEL_PATH/out/arch/arm64/boot
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: PixelOS-martini-${{ env.TAG_NAME }}
+          name: PixelOS-sixteen-Stock-martini-${{ env.TAG_NAME }}
           path: |
             kernel/AnyKernel3/*
 
@@ -146,9 +128,9 @@ jobs:
         if: github.event.inputs.RELEASE_CONFIG == 'true'
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "kernel/out/arch/arm64/boot/PixelOS-martini-${{ env.TAG_NAME }}.zip"
-          tag: "ONEPLUS9RT-PixelOS-${{ env.TAG_NAME }}"
-          name: "PixelOS martini ${{ env.TAG_NAME }}"
+          artifacts: "kernel/out/arch/arm64/boot/PixelOS-sixteen-Stock-martini-${{ env.TAG_NAME }}.zip"
+          tag: "PixelOS-sixteen-Stock-martini-${{ env.TAG_NAME }}"
+          name: "PixelOS sixteen Stock martini ${{ env.TAG_NAME }}"
           allowUpdates: true
           replacesArtifacts: true
           token: ${{ secrets.GITHUB_TOKEN }}
